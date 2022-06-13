@@ -2,6 +2,7 @@ const logger = require("pino")()
 const opensql = require("./opensql")
 const dialect = require("./dialect")
 const mysql = require("mysql")
+const { session } = require("./session")
 
 class Engine {
     /**
@@ -12,11 +13,16 @@ class Engine {
         this.db = db
         this.dialect = dialect
     }
+
+    /**
+     * @returns {boolean}
+     */
     close(){
         if(this.db === undefined){
             logger.error("db is undefined")
-            return
+            return false
         }
+        //TODO Do I need promise?
         this.db.end((err) => {
             if(err){
                 logger.error("Close database error:",err)
@@ -24,6 +30,15 @@ class Engine {
                 logger.info("Close database success")
             }
         })
+        return true
+    }
+    
+    /**
+     * 
+     * @returns {session}
+     */
+    newSession(){
+        return new session(this.db,this.dialect)
     }
 }
 

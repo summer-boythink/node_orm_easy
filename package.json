@@ -1,6 +1,6 @@
 {
   "name": "node_orm",
-  "version": "0.0.1",
+  "version": "0.0.2",
   "description": "a orm of node",
   "main": "index.js",
   "author": "tang",
@@ -11,6 +11,7 @@
     "pino": "^8.0.0"
   },
   "scripts": {
-    "dev": "node test/example.js"
+    "dev": "node test/example.js",
+    "test":"mocha"
   }
 }
