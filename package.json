@@ -1,0 +1,16 @@
+{
+  "name": "node_orm",
+  "version": "0.0.1",
+  "description": "a orm of node",
+  "main": "index.js",
+  "author": "tang",
+  "license": "MIT",
+  "dependencies": {
+    "mocha": "^10.0.0",
+    "mysql": "^2.18.1",
+    "pino": "^8.0.0"
+  },
+  "scripts": {
+    "dev": "node test/example.js"
+  }
+}
