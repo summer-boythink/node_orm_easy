@@ -1,4 +1,4 @@
-const logger = require("pino")()
+const print = require("./print")
 const opensql = require("./opensql")
 const dialect = require("./dialect")
 const mysql = require("mysql")
@@ -19,15 +19,15 @@ class Engine {
      */
     close(){
         if(this.db === undefined){
-            logger.error("db is undefined")
+           print.error("db is undefined")
             return false
         }
         //TODO Do I need promise?
         this.db.end((err) => {
             if(err){
-                logger.error("Close database error:",err)
+                print.error("Close database error:",err)
             }else{
-                logger.info("Close database success")
+                print.info("Close database success")
             }
         })
         return true
@@ -50,11 +50,11 @@ class Engine {
 exports.createConnection = function(driver,config){
     let db = opensql.getConnection(driver,config)
     if(db === undefined){
-        logger.fatal(`Temporarily unsupported ${driver}`)
+        print.error(`Temporarily unsupported ${driver}`)
         return new Engine()
     }
     let dial = dialect.getDialect(driver)
     let e = new Engine(db,dial)
-    logger.info("Connection database success")
+    print.info("Connection database success")
     return e
 }
