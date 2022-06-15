@@ -1,16 +1,21 @@
 const mysql = require("mysql")
 const print = require("../print")
 const {Parse} = require("../schema/index")
+const {tableMap} = require("./table")
+const {Clause,ClauseType} = require("../clause/index")
 
 exports.session = class session{
     constructor(db,dialect){
         this.db = db
         this.dialect = dialect
+        this.driverName = dialect.DriverName()
         this.sqlStatement = null
         this.refTable = null
+
     }
 
     /**
+     * get Connection
      * @returns {mysql.Connection}
      */
     DB(){
@@ -18,6 +23,7 @@ exports.session = class session{
     }
 
     /**
+     * set sqlStatement
      * @param {mysql.QueryOptions | string} params 
      * @returns {session}
      */
@@ -27,12 +33,17 @@ exports.session = class session{
     }
 
     /**
+     * clear sqlStatement
      * @returns {session}
      */
     Clear(){
         this.sqlStatement = null
         return this
     }
+    /**
+     * exec sqlStatement
+     * @returns {Promise}
+     */
 
     async Exec(){
         return await new Promise((resolve,reject) => {
@@ -43,6 +54,7 @@ exports.session = class session{
     }
 
     /**
+     * All sqlStatement execution results
      * @return {Array}
      */
     async QueryRows(){
@@ -52,12 +64,13 @@ exports.session = class session{
     }
 
     /**
-     * @return {Object}
+     * a sqlStatement execution results
+     * @return {Object | Array}
      */
      async QueryRow(){
         let res = await this.Exec()
         this.Clear()
-        return res[0]
+        return Array.isArray(res)? res[0]: res
     }
 
     /**
@@ -83,23 +96,45 @@ exports.session = class session{
         return this.refTable
     }
 
-    async createTable(){
-        let table = this.RefTable()
-        let destsql = `create table if not exists ${table.tableName}(\n`
-        table.fields.forEach(v => {
-            destsql += `${v.name} ${v.type},`
-        })
-        destsql = destsql.slice(0,destsql.length-1)
-        destsql += ') CHARSET=utf8;'
+    /**
+     * table methods
+     * @returns {Promise}
+     */
 
+    async createTable(){
+        let destsql = tableMap.get(this.driverName).createTable(this.RefTable())
         return await this.Raw(destsql).Exec()
     }
 
     async dropTable(){
-        let table = this.RefTable()
-        let destsql = `drop table if exists ${table.tableName}`
+        let destsql = tableMap.get(this.driverName).dropTable(this.RefTable())
         return await this.Raw(destsql).Exec()
     }
 
-    //TODO check table whether exist
+    async tableExist(){
+        let destsql = tableMap.get(this.driverName).tableExist(this.RefTable())
+        return await this.Raw(destsql).Exec()
+    }
+
+    /**
+     * record methods
+     * @param {Object}
+     * @return {Promise}
+     */
+
+    async Insert(values){
+        Clause.SetClause(ClauseType.INSERT,values,this.driverName,this.RefTable())
+        let destsql = Clause.Build(ClauseType.INSERT)
+        return await this.Raw(destsql).Exec()
+    }
+
+    /**
+     * 
+     * @param {string[]} desc 
+     * @return {session}
+     */
+    where(desc){
+        
+    }
+
 }

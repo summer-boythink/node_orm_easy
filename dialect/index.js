@@ -1,5 +1,6 @@
-let dialectMap = new Map()
 const {mysql} = require("./mysql")
+let dialectMap = new Map()
+
 /**
  * @param {string} name 
  * @return {class}
@@ -16,4 +17,4 @@ function RegisterDialect(name,dialect){
     dialectMap.set(name,dialect)
 }
 
-RegisterDialect("mysql",mysql)
+RegisterDialect("MYSQL",mysql)

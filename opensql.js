@@ -6,6 +6,7 @@ exports.supportDriver = supportDriver
 supportDriver.set('MYSQL',getMySQLConnection)
 
 /**
+ * return a MySQLConnection
  * @param {object} config
  * @returns {mysql.Connection}
  */
@@ -22,7 +23,7 @@ function getMySQLConnection(config){
 exports.getConnection = function(driver,config){
     let res
     supportDriver.forEach((fn,k) => {
-        if(k.toLowerCase() === driver){
+        if(k === driver){
             res = fn(config)
         }
     })

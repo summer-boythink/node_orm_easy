@@ -15,6 +15,7 @@ class Engine {
     }
 
     /**
+     * close database
      * @returns {boolean}
      */
     close(){
@@ -34,7 +35,7 @@ class Engine {
     }
     
     /**
-     * 
+     * open a session for performing SQL operations 
      * @returns {session}
      */
     newSession(){
@@ -43,11 +44,13 @@ class Engine {
 }
 
 /**
+ * get a connetion Engine
  * @param {string} driver
  * @param {mysql.ConnectionConfig} config
  * @return {Engine}
  */
 exports.createConnection = function(driver,config){
+    driver = driver.toUpperCase()
     let db = opensql.getConnection(driver,config)
     if(db === undefined){
         print.error(`Temporarily unsupported ${driver}`)

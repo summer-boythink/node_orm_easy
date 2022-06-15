@@ -1,6 +1,8 @@
+const Moment = require("moment")
+
 class Mysql {
     /**
-     * 
+     * Parse js types into database types
      * @param {string} type 
      * @returns {string}
      */
@@ -12,7 +14,7 @@ class Mysql {
             case "String":
                 return "text"
             case "Number":
-                return "int"
+                return "float"
             case "Buffer":
                 return "binary"
             case "Date":
@@ -21,8 +23,29 @@ class Mysql {
                 return "blob"
         }
     }
-    TableExistSQL(){
 
+    /**
+     * translate js value to sql value
+     * @param {any} value
+     */
+    translate(value){
+        let v = Object.prototype.toString.call(value)
+        v = v.slice(8,v.length - 1)
+        switch(v){
+            case "Boolean":
+                return value?1:0
+            case "Date":
+                return Moment(value).format('YYYY-MM-DD HH:mm:ss')
+            default:
+                return value
+        }
+    }
+    /**
+     * 
+     * @returns {string}
+     */
+    DriverName(){
+        return "MYSQL"
     }
 }
 
