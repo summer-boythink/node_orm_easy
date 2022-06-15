@@ -49,9 +49,9 @@ class Engine {
  * @param {mysql.ConnectionConfig} config
  * @return {Engine}
  */
-exports.createConnection = function(driver,config){
+exports.createConnection = async function(driver,config){
     driver = driver.toUpperCase()
-    let db = opensql.getConnection(driver,config)
+    let db = await opensql.getConnection(driver,config)
     if(db === undefined){
         print.error(`Temporarily unsupported ${driver}`)
         return new Engine()

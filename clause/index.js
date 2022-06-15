@@ -1,3 +1,15 @@
+exports.ClauseType = {
+    INSERT : 1,
+    VALUES : 2,
+    SELECT : 3,
+    LIMIT : 4,
+    WHERE : 5,
+    ORDERBY : 6,
+    UPDATE : 7,
+    DELETE : 8,
+    COUNT : 9
+}
+
 const generator = require("./generator")
 
 class Clause {
@@ -29,18 +41,6 @@ class Clause {
         })
         return sql
     }
-}
-
-exports.ClauseType = {
-    INSERT : 1,
-    VALUES : 2,
-    SELECT : 3,
-    LIMIT : 4,
-    WHERE : 5,
-    ORDERBY : 6,
-    UPDATE : 7,
-    DELETE : 8,
-    COUNT : 9
 }
 
 exports.Clause = new Clause()

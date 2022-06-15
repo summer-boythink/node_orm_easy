@@ -31,8 +31,7 @@ function _insert(refTable,values){
 }
 
 
-//TODO why ClauseType is undefined
-mysqlGenerator.set(1,_insert)
+mysqlGenerator.set(ClauseType.INSERT,_insert)
 
 
 module.exports = mysqlGenerator

@@ -8,11 +8,16 @@ supportDriver.set('MYSQL',getMySQLConnection)
 /**
  * return a MySQLConnection
  * @param {object} config
- * @returns {mysql.Connection}
+ * @returns {Promise}
  */
 function getMySQLConnection(config){
-    let connection = mysql.createConnection(config)
-    return connection
+    return new Promise((reslove,reject) => {
+        let connection = mysql.createConnection(config)
+        connection.connect(() => {
+            reslove(connection)
+        })
+    })
+    
 }
 
 /**
