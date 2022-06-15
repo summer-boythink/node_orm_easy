@@ -11,6 +11,7 @@ supportDriver.set('MYSQL',getMySQLConnection)
  * @returns {Promise}
  */
 function getMySQLConnection(config){
+    //TODO Should I return promise?
     return new Promise((reslove,reject) => {
         let connection = mysql.createConnection(config)
         connection.connect(() => {

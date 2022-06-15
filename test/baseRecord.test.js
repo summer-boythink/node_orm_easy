@@ -6,7 +6,7 @@ describe("### Some basic methods for records ###",async () => {
     
     it("test insert",async() => {
         let e = await orm.createConnection("mysql",configure)
-        let s = await e.newSession()
+        let s = e.newSession()
         let testObj = {
             user:String,
             Age:Number,
