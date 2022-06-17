@@ -10,11 +10,12 @@ describe("### Some basic methods for records ###",async () => {
         let testObj = {
             user:String,
             Age:Number,
-            sex:Boolean
+            sex:Boolean,
+            id:Number
         }
         let tableName = "user2"
         await s.Model(tableName,testObj).createTable()
-        let res = await s.Insert({user:"qwe",Age:1,sex:true})
+        let res = await s.Insert({user:"qwe",Age:1,sex:true,id:66})
         assert.equal(res.affectedRows,1)
         e.close()
     })
@@ -25,7 +26,8 @@ describe("### Some basic methods for records ###",async () => {
         let testObj = {
             user:String,
             Age:Number,
-            sex:Boolean
+            sex:Boolean,
+            id:Number
         }
         let tableName = "user2"
         s.Model(tableName,testObj)
@@ -61,7 +63,7 @@ describe("### Some basic methods for records ###",async () => {
         }
         let tableName = "user2"
         s.Model(tableName,testObj)
-        let res = await s.where("id = 6").delete()
+        let res = await s.where("id = 66").delete()
         assert.equal(res.affectedRows,1)
         e.close()
     })
