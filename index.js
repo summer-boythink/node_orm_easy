@@ -49,7 +49,7 @@ exports.MYSQL = "MYSQL"
  * get a connetion Engine
  * @param {string} driver
  * @param {mysql.ConnectionConfig} config
- * @return {Engine}
+ * @return {Promise<Engine>}
  */
 exports.createConnection = async function(driver,config){
     driver = driver.toUpperCase()

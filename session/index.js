@@ -3,6 +3,8 @@ const print = require("../print")
 const {Parse} = require("../schema/index")
 const {tableMap} = require("./table")
 const {Clause,ClauseType} = require("../clause/index")
+const {hooks,hooksMethod} = require("./hooks")
+const record = require("./record")
 
 exports.session = class session{
     constructor(db,dialect){
@@ -11,9 +13,10 @@ exports.session = class session{
         this.driverName = dialect.DriverName()
         this.sqlStatement = null
         this.refTable = null
-
+        this.hook = hooks
+        this.hookMethod = hooksMethod
     }
-
+    
     /**
      * get Connection
      * @returns {mysql.Connection}
@@ -123,9 +126,15 @@ exports.session = class session{
      */
 
     async Insert(values){
+        let hookValues = this.hook.callHook(this.hookMethod.BeforeInsert,values)
+        if(hookValues != undefined){
+            values = hookValues
+        }
         Clause.SetClause(ClauseType.INSERT,values,this.driverName,this.RefTable())
-        let destsql = Clause.Build(ClauseType.INSERT)
-        return await this.Raw(destsql).Exec()
+        let destsql = Clause.Build(...(record.get(this.driverName).INSERT))
+        let res = await this.Raw(destsql).Exec()
+        this.hook.callHook(this.hookMethod.AfterInsert)
+        return res
     }
 
     /**
@@ -133,9 +142,15 @@ exports.session = class session{
      * @return {Promise}
      */
     async select(selectName){
+        this.hook.callHook(this.hookMethod.BeforeSelect)
         Clause.SetClause(ClauseType.SELECT,selectName,this.driverName,this.RefTable())
-        let destSql = Clause.Build(ClauseType.SELECT,ClauseType.WHERE,ClauseType.LIMIT,ClauseType.OFFSET)
-        return await this.Raw(destSql).Exec()
+        let destSql = Clause.Build(...(record.get(this.driverName).SELECT))
+        let res = await this.Raw(destSql).Exec()
+        let ret = this.hook.callHook(this.hookMethod.AfterSelect,res)
+        if(ret != undefined){
+            return ret
+        }
+        return res
     }
 
     /**
@@ -144,15 +159,24 @@ exports.session = class session{
      * @return {Promise}
      */
     async update(newFieldObj){
+        let hookObj = this.hook.callHook(this.hookMethod.BeforeUpdate,newFieldObj)
+        if(hookObj != undefined){
+            newFieldObj = hookObj
+        }
         Clause.SetClause(ClauseType.UPDATE,newFieldObj,this.driverName,this.RefTable())
-        let destSql = Clause.Build(ClauseType.UPDATE,ClauseType.WHERE)
-        return await this.Raw(destSql).Exec()
+        let destSql = Clause.Build(...(record.get(this.driverName).UPDATE))
+        let res = await this.Raw(destSql).Exec()
+        this.hook.callHook(this.hookMethod.AfterUpdate)
+        return res
     }
 
     async delete(){
+        this.hook.callHook(this.hookMethod.BeforeDelete)
         Clause.SetClause(ClauseType.DELETE,null,this.driverName,this.RefTable())
-        let destSql = Clause.Build(ClauseType.DELETE,ClauseType.WHERE)
-        return await this.Raw(destSql).Exec()
+        let destSql = Clause.Build(...(record.get(this.driverName).DELETE))
+        let res = await this.Raw(destSql).Exec()
+        this.hook.callHook(this.hookMethod.AfterDelete)
+        return res
     }
     
     /**

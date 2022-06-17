@@ -1,9 +1,9 @@
 {
-  "name": "node_orm",
-  "version": "0.0.5",
+  "name": "node_orm_easy",
+  "version": "1.0.3",
   "description": "a orm of node",
   "main": "index.js",
-  "author": "tang",
+  "author": "summer-boythink",
   "license": "MIT",
   "dependencies": {
     "mocha": "^10.0.0",
@@ -11,7 +11,6 @@
     "mysql": "^2.18.1"
   },
   "scripts": {
-    "dev": "node test/example.js",
     "test": "mocha --timeout 20000"
   }
 }
