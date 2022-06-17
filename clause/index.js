@@ -7,7 +7,8 @@ exports.ClauseType = {
     ORDERBY : 6,
     UPDATE : 7,
     DELETE : 8,
-    COUNT : 9
+    COUNT : 9,
+    OFFSET : 10
 }
 
 const generator = require("./generator")
@@ -37,7 +38,9 @@ class Clause {
     Build(...types){
         let sql = ""
         types.forEach(v => {
-            sql += this.sql.get(v)
+            if(this.sql.get(v) !== undefined){
+                sql += this.sql.get(v)
+            }
         })
         return sql
     }

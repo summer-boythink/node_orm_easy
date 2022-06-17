@@ -43,6 +43,8 @@ class Engine {
     }
 }
 
+exports.MYSQL = "MYSQL"
+
 /**
  * get a connetion Engine
  * @param {string} driver

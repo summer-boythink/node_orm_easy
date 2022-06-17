@@ -129,12 +129,58 @@ exports.session = class session{
     }
 
     /**
-     * 
-     * @param {string[]} desc 
-     * @return {session}
+     * @param {string[]} selectName
+     * @return {Promise}
      */
-    where(desc){
-        
+    async select(selectName){
+        Clause.SetClause(ClauseType.SELECT,selectName,this.driverName,this.RefTable())
+        let destSql = Clause.Build(ClauseType.SELECT,ClauseType.WHERE,ClauseType.LIMIT,ClauseType.OFFSET)
+        return await this.Raw(destSql).Exec()
     }
 
+    /**
+     * 
+     * @param {Object} newFieldObj 
+     * @return {Promise}
+     */
+    async update(newFieldObj){
+        Clause.SetClause(ClauseType.UPDATE,newFieldObj,this.driverName,this.RefTable())
+        let destSql = Clause.Build(ClauseType.UPDATE,ClauseType.WHERE)
+        return await this.Raw(destSql).Exec()
+    }
+
+    async delete(){
+        Clause.SetClause(ClauseType.DELETE,null,this.driverName,this.RefTable())
+        let destSql = Clause.Build(ClauseType.DELETE,ClauseType.WHERE)
+        return await this.Raw(destSql).Exec()
+    }
+    
+    /**
+     * 
+     * @param {string} desc
+     * @return {session}
+     */
+     where(desc){
+        Clause.SetClause(ClauseType.WHERE,desc,this.driverName,this.RefTable())
+        return this
+    }
+
+    /**
+     * 
+     * @param {Number[]} nums
+     * @return {session}
+     */
+    limit(...nums){
+        Clause.SetClause(ClauseType.LIMIT,nums,this.driverName,this.RefTable())
+        return this
+    }
+    
+    /**
+     * @param {Number} start
+     * @return {session}
+     */
+    offest(start){
+        Clause.SetClause(ClauseType.OFFSET,start,this.driverName,this.RefTable())
+        return this
+    }
 }
