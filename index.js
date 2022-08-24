@@ -44,6 +44,7 @@ class Engine {
 }
 
 exports.MYSQL = "MYSQL"
+exports.SQLITE3 = "SQLITE3"
 
 /**
  * get a connetion Engine

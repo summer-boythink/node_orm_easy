@@ -4,7 +4,7 @@ const supportDriver = new Map()
 exports.supportDriver = supportDriver
 
 supportDriver.set('MYSQL',getMySQLConnection)
-
+supportDriver.set('SQLITE3',getSQLITE3Connection)
 /**
  * return a MySQLConnection
  * @param {object} config
@@ -18,7 +18,19 @@ function getMySQLConnection(config){
             reslove(connection)
         })
     })
-    
+}
+
+/**
+ * 
+ * @param {} driver 
+ * @param {*} config 
+ * @returns 
+ */
+
+function getSQLITE3Connection(config){
+    return new Promise((resolve,reject) => {
+        // let connection = 
+    })
 }
 
 /**
